@@ -73,7 +73,7 @@ class CharonProgram(telepot.aio.helper.ChatHandler):
             self.email = msg['text']
             await send_email_sb(email=self.email, token=self.token)
             await self.sender.sendMessage(
-                "E' stato mandato un codice di verifica a {}. Mandamelo entro 5 minuti.\n\nPer interrompere la procedura, fai /start.".format(
+                "E' stato mandato un codice di verifica a {}. Mandamelo entro 2 minuti.\nIl messaggio potrebbe venire considerato spam.\n\nPer interrompere la procedura, fai /start.".format(
                     msg['text']))
             self.mode = ChatModes.AUTH_TOKEN
             return
@@ -141,7 +141,8 @@ class CharonProgram(telepot.aio.helper.ChatHandler):
                     s += "\n{} {}, @{}".format(user.name, user.surname, user.username)
             if s == "Risultato ricerca:":
                 await self.sender.sendMessage("Nessun utente pubblico è stato trovato.")
-            else: await self.sender.sendMessage(s)
+            else:
+                await self.sender.sendMessage(s)
 
     async def on_chat_message(self, msg):
         if msg['chat']['type'] == "private":
@@ -164,10 +165,10 @@ class CharonProgram(telepot.aio.helper.ChatHandler):
                 return
             if user.hidden:
                 await self.sender.sendMessage(
-                    "L'utente che si è collegato è autenticato, ma ha deciso di rimanere anonimo.\nBenvenuto!")
+                    "L'utente che si è collegato è autenticato, \nma ha deciso di rimanere anonimo.\nBenvenuto/a!")
             else:
                 await self.sender.sendMessage(
-                    "L'utente che si è collegato è {} {}.\nBenvenuto!".format(user.name, user.surname))
+                    "L'utente che si è collegato è \n{} {}.\nBenvenuto/a!".format(user.name, user.surname))
 
     async def hammer(self, member):
         user = member['username']
@@ -183,7 +184,7 @@ class CharonProgram(telepot.aio.helper.ChatHandler):
 
 bot_token = os.getenv("TOKEN")
 
-bot = telepot.aio.DelegatorBot(bot_token, [pave_event_space()(per_chat_id(), create_open, CharonProgram, timeout=300)])
+bot = telepot.aio.DelegatorBot(bot_token, [pave_event_space()(per_chat_id(), create_open, CharonProgram, timeout=120)])
 loop = asyncio.get_event_loop()
 loop.create_task(MessageLoop(bot).run_forever())
 print("Charon is running...")

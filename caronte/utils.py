@@ -33,5 +33,5 @@ async def send_email_sb(email, token):
         'sender': {'name': 'Caronte', 'email': 'noreply@fermitech.info'},
         'to': [{'email': email}],
         'subject': "Caronte - Token usa e getta",
-        'htmlContent': token
+        'htmlContent': "Ciao, questo è il token usa e getta per autenticare il tuo account: {}.".format(token)
     })
